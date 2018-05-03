@@ -1,0 +1,5 @@
+# Local Terraform bits
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+*.tfvars
