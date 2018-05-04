@@ -3,5 +3,4 @@
 *.tfstate
 *.tfstate.*
 *.tfvars
-.kubeadm/*
-.kubeadm
+**/.kubeadm/*
