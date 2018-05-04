@@ -3,7 +3,7 @@
 
 ### Prerequisite
 * Terraform
-* 2 VMs that added ssh public key. One master and one client node
+* 2 Centos VMs which added your ssh public key. One master and one client node
 
 ### Installation
 * Step 1: create file ```env.auto.tfvars``` with those variables:
