@@ -5,7 +5,7 @@ variable "node_ip" {}
 variable "private_key_file" {}
 
 # Installing master node
-resource "null_resource" "master_node" {
+resource "null_resource" "kube_master" {
   provisioner "remote-exec" {
     scripts = [
       "./bash/kube-base.sh",
@@ -20,13 +20,13 @@ resource "null_resource" "master_node" {
   }
 
   provisioner "local-exec" {
-    command     = "scp -r -i ~/.ssh/dev_rsa root@${var.master_ip}:kube_terraform/ .kubeadm"
+    command     = "scp -r -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ~/.ssh/dev_rsa root@${var.master_ip}:kube_terraform/ .kubeadm"
     interpreter = ["bash", "-c"]
   }
 }
 
 # Installing node
-resource "null_resource" "node" {
+resource "null_resource" "kube_node" {
   provisioner "remote-exec" {
     scripts = [
       "./bash/kube-base.sh",
@@ -40,13 +40,14 @@ resource "null_resource" "node" {
   }
 }
 
-resource "null_resource" "join_cluster" {
+resource "null_resource" "kube_node_join_cluster" {
   depends_on = [
-    "null_resource.master_node",
+    "null_resource.kube_node",
+    "null_resource.kube_master",
   ]
 
   provisioner "local-exec" {
-    command     = "scp -r -i ${var.private_key_file} .kubeadm root@${var.node_ip}:kube_terraform/"
+    command     = "scp -r -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ${var.private_key_file} .kubeadm root@${var.node_ip}:kube_terraform/"
     interpreter = ["bash", "-c"]
   }
 
